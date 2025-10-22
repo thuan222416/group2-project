@@ -5,7 +5,7 @@ function UserList() {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        // Lấy dữ liệu từ backend khi component được render
+        // Lấy dữ liệu từ backend khi component được render (localhost --> ip may backend)
         axios.get("http://192.168.1.3:3000/users")
             .then(response => {
                 setUsers(response.data);

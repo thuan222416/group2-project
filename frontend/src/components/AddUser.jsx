@@ -9,7 +9,7 @@ function AddUser() {
         event.preventDefault(); // Ngăn form reload lại trang
 
         const newUser = { name: name, email: email };
-
+        //Localhost--> ip may backend
         axios.post("http://192.168.1.3:3000/users", newUser)
             .then(response => {
                 alert(`User added successfully with ID: ${response.data.id}`);
