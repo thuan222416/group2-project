@@ -1,17 +1,18 @@
 // routes/user.js
-
 const express = require('express');
 const router = express.Router();
+const userController = require('../controllers/userController');
 
-// Import các hàm controller
-const { getAllUsers, createUser } = require('../controllers/userController');
+// GET /users
+router.get('/', userController.getAllUsers);
 
-// Định nghĩa các routes
-// Khi có request GET tới '/', nó sẽ gọi hàm getAllUsers
-router.get('/', getAllUsers);
+// POST /users
+router.post('/', userController.createUser);
 
-// Khi có request POST tới '/', nó sẽ gọi hàm createUser
-router.post('/', createUser);
+// PUT /users/:id
+router.put('/:id', userController.updateUser);
 
-// Xuất router ra để sử dụng trong file chính
+// DELETE /users/:id
+router.delete('/:id', userController.deleteUser);
+
 module.exports = router;
