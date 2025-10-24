@@ -4,4 +4,4 @@
 - Frontend: Trần Tấn Lộc
 - Database: Trần Thanh Tài
 
-BACKEND VIẾT DÒNG NÀY ĐỂ TẠO XUNG ĐỘT
+BACKEND VIẾT DÒNG NÀY ĐỂ TẠO XUNG ĐỘT (FINAL)
