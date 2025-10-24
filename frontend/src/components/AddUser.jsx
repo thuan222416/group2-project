@@ -10,7 +10,7 @@ function AddUser() {
 
         const newUser = { name: name, email: email };
         //Localhost--> ip may backend
-        axios.post("http://192.168.1.3:3000/users", newUser)
+        axios.post("http://192.168.1.9:3000/users", newUser)
             .then(response => {
                 alert(`User added successfully with ID: ${response.data.id}`);
                 // Xóa trống các ô input sau khi thêm thành công
