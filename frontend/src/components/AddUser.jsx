@@ -2,29 +2,43 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-// Nhận props từ App.jsx (bao gồm backendUrl và hàm onUserAdded)
 function AddUser({ onUserAdded, backendUrl }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
-  const handleSubmit = (event) => {
+  // Cập nhật hàm handleSubmit để có validation
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    
+
+    // --- PHẦN VALIDATION BẮT ĐẦU ---
+    // 1. Kiểm tra Tên (không được trống)
+    if (!name.trim()) {
+      alert("Tên không được để trống");
+      return; // Dừng hàm, không gửi request
+    }
+
+    // 2. Kiểm tra Email (phải đúng định dạng)
+    // Regex này kiểm tra định dạng email đơn giản: "chuoi@chuoi.chuoi"
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      alert("Email không hợp lệ. Vui lòng nhập đúng định dạng (ví dụ: test@gmail.com)");
+      return; // Dừng hàm
+    }
+    // --- PHẦN VALIDATION KẾT THÚC ---
+
+    // Nếu mọi thứ hợp lệ, tiếp tục gửi request
     const newUser = { name, email };
 
-    // Sử dụng 'backendUrl' đã được truyền từ App.jsx
-    axios.post(`${backendUrl}/users`, newUser)
-      .then(() => {
-        alert('User added successfully!');
-        
-        // Gọi hàm của App.jsx để tải lại danh sách
-        onUserAdded(); 
-        
-        // Xóa trống các ô input
-        setName('');
-        setEmail('');
-      })
-      .catch(error => console.error('Error adding user:', error));
+    try {
+      await axios.post(`${backendUrl}/users`, newUser);
+      
+      alert('User added successfully!');
+      onUserAdded(); // Tải lại danh sách
+      setName('');   // Xóa form
+      setEmail('');
+    } catch (error) {
+      console.error('Error adding user:', error);
+      alert('Failed to add user. Check console for details.');
+    }
   };
 
   return (
@@ -36,7 +50,7 @@ function AddUser({ onUserAdded, backendUrl }) {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          required
+          // Chúng ta bỏ 'required' của HTML để dùng validation bằng JS
         />
       </div>
       <div>
@@ -45,7 +59,7 @@ function AddUser({ onUserAdded, backendUrl }) {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          required
+          // Bỏ 'required'
         />
       </div>
       <button type="submit">Add User</button>
