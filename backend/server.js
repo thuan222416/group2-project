@@ -1,11 +1,15 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const app = express();
+const port = 3000;
+
+// ✅ BẮT BUỘC: Dòng này phải ở đây, trước các routes
+// Nó giúp server đọc và hiểu được body dạng JSON
+
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/user');
 
-const app = express();
-const port = 3000;
 
 // Middlewares
 app.use(cors());
