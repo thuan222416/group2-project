@@ -4,4 +4,4 @@
 - Frontend: Trần Tấn Lộc
 - Database: Trần Thanh Tài
 
-Dòng này do backend thêm vào để test conflict.
+DÒNG NÀY DO BACKEND VIẾT ĐỂ TẠO XUNG ĐỘT
