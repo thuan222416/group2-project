@@ -6,7 +6,6 @@ const port = 3000;
 
 // ✅ BẮT BUỘC: Dòng này phải ở đây, trước các routes
 // Nó giúp server đọc và hiểu được body dạng JSON
-
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/user');
 
