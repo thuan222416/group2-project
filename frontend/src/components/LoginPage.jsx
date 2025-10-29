@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom'; // <-- THÊM Link VÀO IMPORT
 
 // LẤY ĐỊA CHỈ IP BACKEND
-const BACKEND_URL = 'http://192.168.1.12:3000'; // <-- THAY IP CỦA BẠN
+const BACKEND_URL = 'http://${process.env.REACT_APP_API_URL}:3000'; // <-- THAY IP CỦA BẠN
 
 function LoginPage() {
     const [email, setEmail] = useState('');

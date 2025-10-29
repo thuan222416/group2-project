@@ -17,7 +17,7 @@ import ResetPasswordPage from './components/ResetPasswordPage';
 import './App.css';
 
 // ĐỊNH NGHĨA ĐỊA CHỈ IP Ở ĐÂY
-const BACKEND_URL = 'http://192.168.1.12:3000'; // <-- Giữ nguyên IP của bạn
+const BACKEND_URL = 'http://${process.env.REACT_APP_API_URL}:3000'; // <-- Giữ nguyên IP của bạn
 
 // -----------------------------------------------------------------
 // Component Bảng điều khiển User (Trang chủ)
