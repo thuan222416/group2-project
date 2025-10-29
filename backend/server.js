@@ -7,9 +7,17 @@ const port = 3000;
 // ✅ BẮT BUỘC: Dòng này phải ở đây, trước các routes
 // Nó giúp server đọc và hiểu được body dạng JSON
 const mongoose = require('mongoose');
+const cloudinary = require('cloudinary').v2;
 const userRoutes = require('./routes/user');
 const authRoutes = require('./routes/authRoutes'); // <-- THÊM MỚI
 
+// --- CẤU HÌNH CLOUDINARY NGAY SAU DOTENV ---
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+// -------------------------------------------
 
 // Middlewares
 app.use(cors());
