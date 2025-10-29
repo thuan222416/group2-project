@@ -1,5 +1,6 @@
 // controllers/userController.js
 const User = require('../models/User');
+const cloudinary = require('cloudinary').v2;
 
 // GET all users
 const getAllUsers = async (req, res) => {
@@ -109,11 +110,59 @@ const updateUserProfile = async (req, res) => {
     }
 };
 
+// --- HOẠT ĐỘNG 4: UPLOAD AVATAR ---
+exports.uploadAvatar = async (req, res) => {
+    try {
+        // 1. Check if file exists (Multer puts the file in req.file)
+        if (!req.file) {
+            return res.status(400).json({ message: 'Vui lòng chọn một file ảnh để tải lên.' });
+        }
+
+        // 2. Convert buffer to base64 Data URI for Cloudinary
+        // Multer's memoryStorage gives us the file as a buffer
+        const b64 = Buffer.from(req.file.buffer).toString("base64");
+        let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+
+        // 3. Upload image to Cloudinary
+        const result = await cloudinary.uploader.upload(dataURI, {
+            folder: "group2-project-avatars", // Optional: Organize uploads in a folder
+            // You can add transformations here (e.g., crop, resize)
+            // transformation: [{ width: 150, height: 150, crop: "fill" }]
+        });
+
+        // 4. Update user's avatar URL in the database
+        // We get the user ID from the 'protect' middleware (req.user)
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            // This should rarely happen if 'protect' middleware works
+            return res.status(404).json({ message: 'Không tìm thấy người dùng.' });
+        }
+
+        user.avatar = result.secure_url; // Use the secure HTTPS URL
+        await user.save();
+
+        // 5. Send success response
+        res.status(200).json({
+            message: 'Tải lên avatar thành công!',
+            avatarUrl: result.secure_url,
+        });
+
+    } catch (error) {
+        console.error("Lỗi upload avatar:", error);
+        // Provide more specific error messages if possible
+        if (error.message.includes("File size too large")) {
+             return res.status(400).json({ message: 'Kích thước file quá lớn.' });
+        }
+        res.status(500).json({ message: 'Đã xảy ra lỗi server khi tải lên ảnh.' });
+    }
+};
+
 module.exports = {
     getAllUsers,
     createUser,
-    updateUser, // <-- Thêm vào export
-    deleteUser,  // <-- Thêm vào export
-    getUserProfile,     // <-- THÊM MỚI
-    updateUserProfile   // <-- THÊM MỚI
+    updateUser, 
+    deleteUser,  
+    getUserProfile,     
+    updateUserProfile,   
+    uploadAvatar
 };
