@@ -88,22 +88,25 @@ exports.forgotPassword = async (req, res) => {
         // 2. Tạo token reset gốc (raw token)
         const resetToken = crypto.randomBytes(20).toString('hex');
 
-        // 3. Mã hóa token này để lưu vào DB (băm bằng sha256)
-        user.resetPasswordToken = crypto
-            .createHash('sha256')
-            .update(resetToken) // Băm token gốc
-            .digest('hex'); // Lưu dạng hex
+// 3. Mã hóa token này
+const hashedToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
 
-        // 4. Đặt thời gian hết hạn (ví dụ: 10 phút)
-        user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 phút tính bằng mili giây
+// 4. Đặt thời gian hết hạn
+const expireDate = Date.now() + 10 * 60 * 1000; // 10 phút
 
-        // 5. Lưu user lại vào DB
-        await user.save();
+// 5. Cập nhật trực tiếp vào DB, chỉ 2 trường này
+await User.findByIdAndUpdate(user._id, {
+    resetPasswordToken: hashedToken,
+    resetPasswordExpire: expireDate
+});
 
         // 6. Tạo URL Reset (để gửi cho người dùng)
         // URL này sẽ trỏ đến trang Reset Password của frontend
         // (Hiện tại chúng ta chưa có trang này, tạm để placeholder)
-        const resetUrl = `http://localhost:3001/reset-password/${resetToken}`; 
+        const resetUrl = `http://localhost:3000/reset-password/${resetToken}`; 
         // Lưu ý: Gửi token gốc (resetToken), không phải token đã mã hóa!
 
         const message = `Bạn nhận được email này vì đã yêu cầu reset mật khẩu. Vui lòng nhấn vào link sau để đặt lại mật khẩu (link hết hạn sau 10 phút):\n\n${resetUrl}`;
@@ -113,7 +116,6 @@ exports.forgotPassword = async (req, res) => {
         console.log("!!! TOKEN RESET (Gửi cho SV3 test):", resetToken);
         console.log("-----------------------------------------");
 
-        /* (Tùy chọn: Bỏ comment nếu muốn gửi email thật)
         try {
             await sendEmail({
                 email: user.email,
@@ -130,9 +132,9 @@ exports.forgotPassword = async (req, res) => {
              await user.save();
              res.status(500).json({ message: 'Lỗi khi gửi email. Vui lòng thử lại sau.' });
         }
-        */
+        
         // Tạm thời chỉ log token ra console
-        res.status(200).json({ success: true, message: 'Yêu cầu đã được xử lý. Vui lòng kiểm tra console backend để lấy token reset.' });
+        //res.status(200).json({ success: true, message: 'Yêu cầu đã được xử lý. Vui lòng kiểm tra console backend để lấy token reset.' });
 
     } catch (error) {
         console.error("Lỗi forgotPassword:", error);
