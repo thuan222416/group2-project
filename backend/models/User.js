@@ -1,6 +1,7 @@
 // models/User.js
+// PHIÊN BẢN HOÀN CHỈNH (ĐÃ GỘP HĐ1 VÀ HĐ4)
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs'); // Cần cho Hoạt động 1
+const bcrypt = require('bcryptjs'); 
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -12,7 +13,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    // ---- THÊM TỪ HOẠT ĐỘNG 1 ----
+    // --- Từ Hoạt động 1 (có trên 'main') ---
     password: {
         type: String,
         required: true
@@ -22,19 +23,19 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'admin'],
         default: 'user'
     },
-    // ----------------------------
+    // ------------------------------------
 
-    // ---- THÊM MỚI (HOẠT ĐỘNG 4) ----
+    // --- Từ Hoạt động 4 (có trên 'database-advanced') ---
     avatar: {
         type: String,
-        default: 'https://i.imgur.com/6VBx3io.png' // Link ảnh avatar mặc định
+        default: 'https://i.imgur.com/6VBx3io.png' 
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date
-    // ------------------------------
+    // --------------------------------------------------
 });
 
-// ---- LOGIC TỪ HOẠT ĐỘNG 1 (Mã hóa mật khẩu) ----
+// --- Logic từ Hoạt động 1 (có trên 'main') ---
 userSchema.pre('save', async function(next) {
     if (!this.isModified('password')) {
         return next();
@@ -44,11 +45,10 @@ userSchema.pre('save', async function(next) {
     next();
 });
 
-// ---- LOGIC TỪ HOẠT ĐỘNG 1 (So sánh mật khẩu) ----
 userSchema.methods.comparePassword = async function(enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
-// -------------------------------------------------
+// ---------------------------------------------
 
 const User = mongoose.model('User', userSchema);
 
