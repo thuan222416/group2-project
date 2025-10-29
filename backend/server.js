@@ -8,6 +8,7 @@ const port = 3000;
 // Nó giúp server đọc và hiểu được body dạng JSON
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/user');
+const authRoutes = require('./routes/authRoutes'); // <-- THÊM MỚI
 
 
 // Middlewares
@@ -15,7 +16,8 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use('/users', userRoutes);
+app.use('/users', userRoutes); // <-- GIỮ NGUYÊN
+app.use('/auth', authRoutes);  // <-- SỬA LẠI: Bỏ /api
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
