@@ -60,9 +60,60 @@ const deleteUser = async (req, res) => {
     }
 };
 
+// --- HOẠT ĐỘNG 2: THÊM HÀM PROFILE ---
+
+// @desc    Lấy thông tin profile của user đã đăng nhập
+// @route   GET /users/profile
+const getUserProfile = async (req, res) => {
+    // req.user được gắn vào bởi middleware 'protect'
+    const user = req.user; 
+    
+    if (user) {
+        res.status(200).json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role
+        });
+    } else {
+        res.status(404).json({ message: 'User not found' });
+    }
+};
+
+// @desc    Cập nhật thông tin profile của user
+// @route   PUT /users/profile
+const updateUserProfile = async (req, res) => {
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
+
+        // Nếu user có đổi mật khẩu
+        if (req.body.password) {
+            user.password = req.body.password;
+        }
+
+        // Mật khẩu sẽ tự động được băm (hash) nhờ hook 'pre.save' trong Model
+        const updatedUser = await user.save(); 
+
+        res.status(200).json({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            role: updatedUser.role,
+            message: 'Cập nhật thành công'
+        });
+    } else {
+        res.status(404).json({ message: 'User not found' });
+    }
+};
+
 module.exports = {
     getAllUsers,
     createUser,
     updateUser, // <-- Thêm vào export
-    deleteUser  // <-- Thêm vào export
+    deleteUser,  // <-- Thêm vào export
+    getUserProfile,     // <-- THÊM MỚI
+    updateUserProfile   // <-- THÊM MỚI
 };
