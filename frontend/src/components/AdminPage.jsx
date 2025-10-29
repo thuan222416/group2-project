@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import UserList from './UserList'; // Tái sử dụng component UserList
 
-const BACKEND_URL = '${process.env.REACT_APP_API_URL}'; // <-- THAY IP CỦA BẠN
+const BACKEND_URL = process.env.REACT_APP_API_URL; // <-- THAY IP CỦA BẠN
 
 function AdminPage() {
     const [users, setUsers] = useState([]);
