@@ -11,7 +11,7 @@ function SignupPage() {
         e.preventDefault();
         try {
             // Thay IP của SV1 vào đây
-            const res = await axios.post('http://${process.env.REACT_APP_API_URL}:3000/auth/signup', { name, email, password });
+            const res = await axios.post('http://${process.env.REACT_APP_API_URL}/auth/signup', { name, email, password });
             setMessage(res.data.message);
         } catch (error) {
             setMessage(error.response.data.message);

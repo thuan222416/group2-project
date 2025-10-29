@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const BACKEND_URL = 'http://${process.env.REACT_APP_API_URL}:3000'; // <-- THAY IP CỦA BẠN
+const BACKEND_URL = 'http://${process.env.REACT_APP_API_URL}'; // <-- THAY IP CỦA BẠN
 
 function ProfilePage() {
     const [name, setName] = useState('');
