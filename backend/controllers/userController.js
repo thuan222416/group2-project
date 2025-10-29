@@ -111,7 +111,7 @@ const updateUserProfile = async (req, res) => {
 };
 
 // --- HOẠT ĐỘNG 4: UPLOAD AVATAR ---
-exports.uploadAvatar = async (req, res) => {
+const uploadAvatar = async (req, res) => {
     try {
         // 1. Check if file exists (Multer puts the file in req.file)
         if (!req.file) {
@@ -158,11 +158,11 @@ exports.uploadAvatar = async (req, res) => {
 };
 
 module.exports = {
-    getAllUsers,
+    getAllUsers, // Chỉ cần ghi tên
     createUser,
-    updateUser, 
-    deleteUser,  
-    getUserProfile,     
-    updateUserProfile,   
-    uploadAvatar
+    updateUser,
+    deleteUser,
+    getUserProfile,
+    updateUserProfile,
+    uploadAvatar // Ghi tên hàm bạn vừa định nghĩa ở trên
 };
