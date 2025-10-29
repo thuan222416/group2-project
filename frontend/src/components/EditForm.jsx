@@ -18,7 +18,7 @@ function EditForm({ user, fetchUsers, setUserToEdit }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         // Lấy địa chỉ IP của máy backend (thay cho localhost)
-        const backendUrl = '${process.env.REACT_APP_API_URL}'; // <-- THAY ĐỊA CHỈ IP CỦA BẠN
+        const backendUrl = process.env.REACT_APP_API_URL; // <-- THAY ĐỊA CHỈ IP CỦA BẠN
 
         axios.put(`${backendUrl}/users/${user._id}`, { name, email })
             .then(() => {
