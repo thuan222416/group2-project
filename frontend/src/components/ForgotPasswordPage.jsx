@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'; // Import useEffect
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-const BACKEND_URL = 'http://192.168.1.12:3000'; // <-- THAY IP CỦA BẠN
+const BACKEND_URL = 'http://${process.env.REACT_APP_API_URL}:3000'; // <-- THAY IP CỦA BẠN
 
 function ForgotPasswordPage() {
     const [email, setEmail] = useState('');
