@@ -4,7 +4,7 @@ import axios from 'axios';
 // Import hook để lấy param từ URL và điều hướng
 import { useParams, useNavigate } from 'react-router-dom';
 
-const BACKEND_URL = 'http://${process.env.REACT_APP_API_URL}'; // <-- THAY IP CỦA BẠN
+const BACKEND_URL = '${process.env.REACT_APP_API_URL}'; // <-- THAY IP CỦA BẠN
 
 function ResetPasswordPage() {
     const [password, setPassword] = useState('');
