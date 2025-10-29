@@ -19,8 +19,20 @@ cloudinary.config({
 });
 // -------------------------------------------
 
+// Khai báo một đối tượng cấu hình CORS để cho phép mọi nguồn
+const corsOptions = {
+  // Dấu '*' cho phép bất kỳ domain nào gọi API
+  origin: '*', 
+  // Cho phép các phương thức cần thiết
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  // Cho phép truyền các Header như Authorization (cần cho JWT)
+  allowedHeaders: 'Content-Type,Authorization',
+  // Cho phép truy cập thông tin cookie/session (nếu có)
+  credentials: true
+};
+
 // Middlewares
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Routes
