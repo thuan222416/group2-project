@@ -141,10 +141,52 @@ exports.forgotPassword = async (req, res) => {
     }
 };
 
+// --- HOẠT ĐỘNG 4: RESET MẬT KHẨU ---
+exports.resetPassword = async (req, res) => {
+    try {
+        // 1. Get the hashed token from URL parameter
+        const resetPasswordToken = crypto
+            .createHash('sha256')
+            .update(req.params.token) // Hash the raw token from the URL
+            .digest('hex');
+
+        // 2. Find user by the hashed token and check expiry date
+        const user = await User.findOne({
+            resetPasswordToken, // Find using the hashed token stored in DB
+            resetPasswordExpire: { $gt: Date.now() }, // Check if expiry date is still in the future
+        });
+
+        // 3. If token is invalid or expired
+        if (!user) {
+            return res.status(400).json({ message: 'Token đặt lại mật khẩu không hợp lệ hoặc đã hết hạn' });
+        }
+
+        // 4. Set the new password
+        user.password = req.body.password;
+
+        // 5. Clear the reset token fields (so it can't be used again)
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+
+        // 6. Save the user (password will be automatically hashed by pre-save hook)
+        await user.save();
+
+        // (Optional: Generate a new login token immediately if needed)
+        // const token = generateToken(user._id, user.role);
+
+        res.status(200).json({ success: true, message: 'Đặt lại mật khẩu thành công' });
+
+    } catch (error) {
+        console.error("Lỗi resetPassword:", error);
+        res.status(500).json({ message: 'Đã xảy ra lỗi. Vui lòng thử lại sau.' });
+    }
+};
+
 // Cập nhật module.exports để thêm hàm mới
 module.exports = {
     signup: exports.signup,
     login: exports.login,
     logout: exports.logout,
-    forgotPassword: exports.forgotPassword // <-- THÊM MỚI
+    forgotPassword: exports.forgotPassword,
+    resetPassword: exports.resetPassword
 };

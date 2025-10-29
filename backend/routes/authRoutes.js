@@ -9,7 +9,7 @@ router.post('/logout', authController.logout);
 
 // --- HOẠT ĐỘNG 4 ---
 router.post('/forgot-password', authController.forgotPassword); // <-- DÒNG MỚI
-// router.put('/reset-password/:token', authController.resetPassword); // (Sẽ thêm sau)
+router.put('/reset-password/:token', authController.resetPassword); 
 // -------------------
 
 module.exports = router;
