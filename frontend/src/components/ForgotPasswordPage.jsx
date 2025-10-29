@@ -1,27 +1,44 @@
 // src/components/ForgotPasswordPage.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Import useEffect
 import axios from 'axios';
-import { Link } from 'react-router-dom'; // Import Link
+import { Link } from 'react-router-dom';
 
-// LẤY ĐỊA CHỈ IP BACKEND TỪ App.jsx HOẶC ĐỊNH NGHĨA Ở ĐÂY
 const BACKEND_URL = 'http://192.168.1.12:3000'; // <-- THAY IP CỦA BẠN
 
 function ForgotPasswordPage() {
     const [email, setEmail] = useState('');
-    const [message, setMessage] = useState('');
-    const [error, setError] = useState(''); // Thêm state cho lỗi
+    const [message, setMessage] = useState(''); // For backend response
+    const [error, setError] = useState('');
+    const [isSending, setIsSending] = useState(false);
+    const [success, setSuccess] = useState(false); // <-- STATE MỚI CHO THÀNH CÔNG
+
+    // Clear success message after 3 seconds
+    useEffect(() => {
+        let timer;
+        if (success) {
+            timer = setTimeout(() => {
+                setSuccess(false);
+            }, 3000); // 3 giây
+        }
+        return () => clearTimeout(timer); // Cleanup timer on component unmount or if success changes
+    }, [success]);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setMessage(''); // Reset thông báo cũ
-        setError('');   // Reset lỗi cũ
+        setMessage('');
+        setError('');
+        setSuccess(false); // Reset success state on new submit
+        setIsSending(true);
+
         try {
-            // Gọi API /auth/forgot-password
             const res = await axios.post(`${BACKEND_URL}/auth/forgot-password`, { email });
-            setMessage(res.data.message); // Hiển thị thông báo thành công
+            setMessage(res.data.message); // Lưu thông báo từ backend
+            setSuccess(true);           // <-- ĐẶT LÀ TRUE KHI THÀNH CÔNG
         } catch (err) {
-            // Hiển thị lỗi từ backend (nếu có) hoặc lỗi chung
             setError(err.response?.data?.message || 'Đã xảy ra lỗi. Vui lòng thử lại.');
+        } finally {
+            setIsSending(false);
         }
     };
 
@@ -39,16 +56,23 @@ function ForgotPasswordPage() {
                         onChange={(e) => setEmail(e.target.value)}
                         required
                         style={{ marginLeft: '5px', marginBottom: '10px' }}
+                        disabled={isSending}
                     />
                 </div>
-                <button type="submit">Gửi Yêu Cầu</button>
+                <button type="submit" disabled={isSending}>
+                    {isSending ? 'Đang gửi...' : 'Gửi Yêu Cầu'}
+                </button>
             </form>
-            {/* Hiển thị thông báo thành công hoặc lỗi */}
-            {message && <p style={{ color: 'green' }}>{message}</p>}
+
+            {/* Hiển thị trạng thái */}
+            {isSending && <p style={{ color: 'orange' }}>Đang xử lý yêu cầu...</p>}
+            {success && <p style={{ color: 'green' }}>✔ Yêu cầu đã được gửi thành công!</p>}
+            {message && !success && <p style={{ color: 'blue' }}>{message}</p>} {/* Chỉ hiện message backend nếu không phải success */}
             {error && <p style={{ color: 'red' }}>{error}</p>}
+
             <br />
             <Link to="/login">Quay lại Đăng nhập</Link>
         </div>
     );
 }
-export default ForgotPasswordPage;  
+export default ForgotPasswordPage;
